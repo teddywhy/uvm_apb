@@ -46,8 +46,8 @@ class uvm_apb_env extends uvm_env;
 
     reset_agent     .monitor.analysis_port.connect(scoreboard.analysis_imp_from_reset_monitor);
 
-    apb_master_agent.monitor.analysis_port.connect(scoreboard.analysis_imp_mon2sb_master);
-    apb_slave_agent .monitor.analysis_port.connect(scoreboard.analysis_imp_mon2sb_slave);
+    apb_master_agent.monitor.analysis_port.connect(scoreboard.analysis_imp_from_apb_master_agent);
+    apb_slave_agent .monitor.analysis_port.connect(scoreboard.analysis_imp_from_apb_slave_agent);
 
     apb_slave_agent.request_monitor.analysis_port.connect(apb_slave_analysis_fifo.analysis_export);
 

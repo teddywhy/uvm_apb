@@ -1,5 +1,5 @@
 
-`uvm_analysis_imp_decl(_mon2sb)
+`uvm_analysis_imp_decl(_from_apb_master_agent)
 `uvm_analysis_imp_decl(_from_reset_monitor)
 class uvm_apb_master_scoreboard #
 (
@@ -15,7 +15,7 @@ extends uvm_scoreboard;
 
   uvm_analysis_imp_from_reset_monitor #(uvm_reset_sequence_item   , uvm_apb_master_scoreboard#(PM)) analysis_imp_from_reset_monitor ;
   
-  uvm_analysis_imp_mon2sb             #(uvm_apb_sequence_item#(PM), uvm_apb_master_scoreboard#(PM)) analysis_imp_mon2sb;
+  uvm_analysis_imp_from_apb_master_agent             #(uvm_apb_sequence_item#(PM), uvm_apb_master_scoreboard#(PM)) analysis_imp_from_apb_master_agent;
 
   function new (string name="uvm_apb_master_scoreboard", uvm_component parent);
     super.new(name, parent);
@@ -24,17 +24,17 @@ extends uvm_scoreboard;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     
-    analysis_imp_mon2sb = new("analysis_imp_mon2sb", this);
+    analysis_imp_from_apb_master_agent = new("analysis_imp_from_apb_master_agent", this);
     analysis_imp_from_reset_monitor = new("analysis_imp_from_reset_monitor" ,  this); 
     
   endfunction: build_phase
 
   // write from monitor to scoreboard
-  function void write_mon2sb(uvm_apb_sequence_item#(PM) item);
+  function void write_from_apb_master_agent(uvm_apb_sequence_item#(PM) item);
 
       `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s"           ,
                                   get_full_name()                    ,
-                                  "write_mon2sb"                     ,
+                                  "write_from_apb_master_agent"      ,
                                   item.sprint()                     ),
                                   UVM_LOW                             )
   

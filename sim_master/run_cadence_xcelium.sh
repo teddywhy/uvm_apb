@@ -257,6 +257,7 @@ clean()
   rm -rf xrun.key
   rm -rf xcelium.d
   rm -rf waves.shm
+  rm -rf .simvision
 
   rm -rf ${FILE_CMD}
   rm -rf ${FILE_TCL}
@@ -266,6 +267,7 @@ clean()
   echo rm -rf xrun.key
   echo rm -rf xcelium.d
   echo rm -rf waves.shm
+  echo rm -rf .simvision
 
   echo rm -rf ${FILE_CMD}
   echo rm -rf ${FILE_TCL}

@@ -33,7 +33,7 @@ class uvm_apb_master_env extends uvm_env;
 
     reset_agent     .monitor.analysis_port.connect(scoreboard.analysis_imp_from_reset_monitor);
 
-    apb_master_agent.monitor.analysis_port.connect(scoreboard.analysis_imp_mon2sb);
+    apb_master_agent.monitor.analysis_port.connect(scoreboard.analysis_imp_from_apb_master_agent);
 
   endfunction: connect_phase
 
