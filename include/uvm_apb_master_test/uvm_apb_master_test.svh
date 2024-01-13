@@ -1,12 +1,12 @@
 
-`ifndef __UVM_APB_MASTER_TEST_SVH__
-`define __UVM_APB_MASTER_TEST_SVH__
 
 class uvm_apb_master_test extends uvm_test;
 
   `uvm_component_utils(uvm_apb_master_test)
 
-  uvm_apb_master_env                            master_env        ;
+  uvm_apb_master_env                            env      ;
+
+  uvm_reset_sequence                            reset_sequence    ;
 
   uvm_apb_master_sequence_w   #(apb_parameter)  master_sequence_w ;
   uvm_apb_master_sequence_r   #(apb_parameter)  master_sequence_r ;    
@@ -21,7 +21,9 @@ class uvm_apb_master_test extends uvm_test;
      
      uvm_config_int::set(this, "*", "recording_detail", 1); // Enable Transaction Recording
      
-     master_env   = uvm_apb_master_env::type_id::create("apb_master_env", this);    
+     env   = uvm_apb_master_env::type_id::create("env", this);    
+
+     reset_sequence    = uvm_reset_sequence                        ::type_id::create("reset_sequence"   , this);
      
      master_sequence_w = uvm_apb_master_sequence_w #(apb_parameter)::type_id::create("master_sequence_w", this);
      master_sequence_r = uvm_apb_master_sequence_r #(apb_parameter)::type_id::create("master_sequence_r", this);
@@ -41,9 +43,11 @@ class uvm_apb_master_test extends uvm_test;
   
     phase.raise_objection(this);
 
+    reset_sequence   .start(env.reset_agent.sequencer);
+
     // sequences        
-    master_sequence_w.start(master_env.apb_master_agent.sequencer);
-    master_sequence_r.start(master_env.apb_master_agent.sequencer);
+    master_sequence_w.start(env.apb_master_agent.sequencer);
+    master_sequence_r.start(env.apb_master_agent.sequencer);
     
     phase.drop_objection(this);
     
@@ -53,7 +57,6 @@ class uvm_apb_master_test extends uvm_test;
 
 endclass : uvm_apb_master_test  
 
-`endif
 
 
 // teddywhy@gmail.com

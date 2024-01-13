@@ -8,9 +8,9 @@ extends uvm_monitor;
 
    `uvm_component_param_utils(uvm_apb_request_monitor#(PM))
    
-   virtual interface apb_interface #(PM) vif;
+   virtual interface apb_interface #(PM).passive vif;
    
-   uvm_analysis_port#(uvm_apb_sequence_item#(PM)) analysis_port ; // analysis port
+   uvm_analysis_port#(uvm_apb_sequence_item#(PM)) analysis_port ; 
 
    function new (string name="uvm_apb_monitor", uvm_component parent);
      super.new(name, parent);
@@ -21,24 +21,23 @@ extends uvm_monitor;
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
 
-    `uvm_info(get_type_name(), "Detected Reset Done", UVM_MEDIUM)
+//  `uvm_info(get_type_name(), "Detected Reset Done", UVM_MEDIUM)
 
     forever begin
     	uvm_apb_sequence_item #(PM) item = uvm_apb_sequence_item#(PM)::type_id::create("item", this); // Create collected item instance
 
       // capture the signals of the virtual interface and collected items as item_collected.
-      // ...
 
-      @(posedge this.vif.clk)
+      @(this.vif.pcb)
       begin
-         if(this.vif.psel & (!this.vif.penable))
+         if(this.vif.pcb.psel & (!this.vif.pcb.penable))
          begin
-         	item.address = this.vif.paddr  ; 
-         	item.strobe  = this.vif.pstrb  ;
-         	item.pwrite  = this.vif.pwrite ;
+         	item.address = this.vif.pcb.paddr  ; 
+         	item.strobe  = this.vif.pcb.pstrb  ;
+         	item.pwrite  = this.vif.pcb.pwrite ;
          
-          if(this.vif.pwrite)
-            item.data = this.vif.pwdata ;
+          if(this.vif.pcb.pwrite)
+            item.data = this.vif.pcb.pwdata ;
          
           `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s" , 
                                       get_full_name()          ,

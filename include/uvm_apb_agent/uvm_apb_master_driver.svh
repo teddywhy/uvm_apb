@@ -11,7 +11,7 @@ extends uvm_driver #
    uvm_apb_sequence_item #(PM)
 );
 
-  virtual apb_interface #(PM) vif;      
+  virtual apb_interface #(PM).master vif;      
 
   `uvm_component_utils(uvm_apb_master_driver)
 
@@ -40,16 +40,16 @@ extends uvm_driver #
                                                            item.sprint()                               ), 
                                                            UVM_LOW                      )  
                   	           
-                               this.vif.psel    <= '1;
-                               this.vif.penable <= '0; 
-                               this.vif.pstrb   <= item.strobe;
-                               this.vif.pprot   <= '0;
-                               this.vif.pwrite  <= item.pwrite;
-                               this.vif.paddr   <= item.address;
+                               this.vif.mcb.psel    <= '1;
+                               this.vif.mcb.penable <= '0; 
+                               this.vif.mcb.pstrb   <= item.strobe;
+                               this.vif.mcb.pprot   <= '0;
+                               this.vif.mcb.pwrite  <= item.pwrite;
+                               this.vif.mcb.paddr   <= item.address;
                                
                                if(item.pwrite)
                                begin
-                                  this.vif.pwdata  <= item.data;
+                                  this.vif.mcb.pwdata  <= item.data;
                                end  
   endtask
 
@@ -71,23 +71,23 @@ extends uvm_driver #
 
     state             = IDLE ;
 
-    this.vif.psel    <= '0;
-    this.vif.penable <= '0;
-    this.vif.pstrb   <= '0;
-    this.vif.pwrite  <= '0;
-    this.vif.pwdata  <= '0;
-    this.vif.paddr   <= '0;
-    this.vif.pprot   <= '0;
+    this.vif.mcb.psel    <= '0;
+    this.vif.mcb.penable <= '0;
+    this.vif.mcb.pstrb   <= '0;
+    this.vif.mcb.pwrite  <= '0;
+    this.vif.mcb.pwdata  <= '0;
+    this.vif.mcb.paddr   <= '0;
+    this.vif.mcb.pprot   <= '0;
 
-    @(negedge vif.reset_n);
-
-    @(posedge vif.reset_n);
-    `uvm_info(get_type_name(),"reset_n asserted!", UVM_MEDIUM)
+//  @(negedge this.vif.mcb.reset_n);
+//
+//  @(negedge this.vif.mcb.reset_n);
+//  `uvm_info(get_type_name(),"reset_n asserted!", UVM_MEDIUM)
 
 
     forever begin
 
-      @(posedge this.vif.clk)      
+      @(this.vif.mcb)      
       begin
         case(state)
         IDLE:        begin
@@ -96,22 +96,22 @@ extends uvm_driver #
                         
                         if(req != null)
                         begin      
-                           `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s"            , 
-                                                       get_full_name()                     ,
+                           `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s"                 , 
+                                                       get_full_name()                          ,
                                                        "seq_item_port.try_next_item(req) IDLE"  , 
-                                                       req.sprint()                       ), 
+                                                       req.sprint()                            ), 
                                                        UVM_LOW                      )  
 
                         	 if(req.delay>0)
                         	 begin
                         	 	   delay_count = req.delay - 1 ;
                         	 	   
-                        	 	   this.vif.psel    <= '0               ; 
-                               this.vif.penable <= '0               ;  
-                               this.vif.pstrb   <= ~req.strobe      ;
-                               this.vif.pwrite  <= ~req.pwrite      ;
-                               this.vif.paddr   <= ~req.address     ;
-                               this.vif.pwdata  <= ~req.data        ;
+                        	 	   this.vif.mcb.psel    <= '0               ; 
+                               this.vif.mcb.penable <= '0               ;  
+                               this.vif.mcb.pstrb   <= ~req.strobe      ;
+                               this.vif.mcb.pwrite  <= ~req.pwrite      ;
+                               this.vif.mcb.paddr   <= ~req.address     ;
+                               this.vif.mcb.pwdata  <= ~req.data        ;
                                
                         	 	   state = DELAY;
                         	 end
@@ -125,8 +125,8 @@ extends uvm_driver #
                         end
                         else
                         begin
-                            this.vif.psel    <= '0;
-                            this.vif.penable <= '0;
+                            this.vif.mcb.psel    <= '0;
+                            this.vif.mcb.penable <= '0;
                         end                     
                        
                      end
@@ -146,12 +146,12 @@ extends uvm_driver #
                      end 
                                  
         SETUP:       begin
-                        this.vif.penable <= '1;
+                        this.vif.mcb.penable <= '1;
                         state = WAIT_READY ;       	
         	           end
         	           
         WAIT_READY:  begin
-                          if(this.vif.pready)
+                          if(this.vif.mcb.pready)
                           begin                                                        
                           	  seq_item_port.item_done();   
                           
@@ -159,22 +159,22 @@ extends uvm_driver #
                               
                               if(req != null)
                               begin
-                                  `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s"            , 
-                                                              get_full_name()                     ,
+                                  `uvm_info(get_type_name(), $sformatf("\n%s\n%s:\n%s"                       , 
+                                                              get_full_name()                                ,
                                                               "seq_item_port.try_next_item(req) WAIT_READY"  , 
-                                                              req.sprint()                       ), 
+                                                              req.sprint()                                  ), 
                                                               UVM_LOW                      )  
                               	
                                 	if(req.delay)
                                 	begin
                                 		   delay_count = req.delay - 1 ;
                         	 	           
-                        	 	           this.vif.psel    <= '0               ;
-                                       this.vif.penable <= '0               ;                                		   
-                                       this.vif.pstrb   <= ~req.strobe      ;
-                                       this.vif.pwrite  <= ~req.pwrite      ;
-                                       this.vif.paddr   <= ~req.address     ;
-                                       this.vif.pwdata  <= ~req.data        ;
+                        	 	           this.vif.mcb.psel    <= '0               ;
+                                       this.vif.mcb.penable <= '0               ;                                		   
+                                       this.vif.mcb.pstrb   <= ~req.strobe      ;
+                                       this.vif.mcb.pwrite  <= ~req.pwrite      ;
+                                       this.vif.mcb.paddr   <= ~req.address     ;
+                                       this.vif.mcb.pwdata  <= ~req.data        ;
                                 		   
                                 		   state = DELAY;
                                 	end
@@ -187,12 +187,18 @@ extends uvm_driver #
                               end                     
                               else
                               begin
-                                  this.vif.psel    <= '0;
-                                  this.vif.penable <= '0;
-                                  this.vif.pstrb   <= ~this.vif.pstrb  ;
-                                  this.vif.pwrite  <= ~this.vif.pwrite ;
-                                  this.vif.paddr   <= ~this.vif.paddr  ;
-                                  this.vif.pwdata  <= ~this.vif.pwdata ;
+                                  this.vif.mcb.psel    <= '0;
+                                  this.vif.mcb.penable <= '0;
+
+//                                this.vif.mcb.pstrb   <= ~this.vif.mcb.pstrb  ;
+//                                this.vif.mcb.pwrite  <= ~this.vif.mcb.pwrite ;
+//                                this.vif.mcb.paddr   <= ~this.vif.mcb.paddr  ;
+//                                this.vif.mcb.pwdata  <= ~this.vif.mcb.pwdata ;
+
+                                  this.vif.mcb.pstrb   <= '0;
+                                  this.vif.mcb.pwrite  <= '0;
+                                  this.vif.mcb.paddr   <= '0;
+                                  this.vif.mcb.pwdata  <= '0;
                                   
                                   state = IDLE ;       	                       	                                          
                               end

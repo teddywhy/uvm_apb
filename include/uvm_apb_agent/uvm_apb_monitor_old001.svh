@@ -12,12 +12,12 @@ extends uvm_monitor;
 
   virtual interface apb_interface #(PM).passive vif;
 
-  uvm_analysis_port#(uvm_apb_sequence_item#(PM)) analysis_port ; // analysis port to be connected with scoreboard
+  uvm_analysis_port#(uvm_apb_sequence_item#(PM)) analysisport ; // analysis port to be connected with scoreboard
 
   function new (string name="uvm_apb_monitor", uvm_component parent);
     super.new(name, parent);
 
-    analysis_port  = new("analysis_port", this);
+    analysisport  = new("analysisport", this);
   endfunction : new
 
   task run_phase(uvm_phase phase);
@@ -52,7 +52,7 @@ extends uvm_monitor;
                                          item.sprint()            ), 
                                          UVM_LOW                      )  
             
-            analysis_port.write(item); // send the item to scoreboard for checking
+            analysisport.write(item); // send the item to scoreboard for checking
          end
       end
       

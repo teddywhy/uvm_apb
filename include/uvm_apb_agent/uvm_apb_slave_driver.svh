@@ -11,7 +11,7 @@ extends uvm_driver #
    uvm_apb_sequence_item #(PM)
 );
 
-  virtual apb_interface #(PM) vif;
+  virtual apb_interface #(PM).slave vif;
 
   `uvm_component_utils(uvm_apb_slave_driver)
 
@@ -39,13 +39,13 @@ extends uvm_driver #
 
     state             = IDLE ;
 
-    this.vif.pready    <= '0;
-    this.vif.pslverr   <= '0;
+    this.vif.scb.pready    <= '0;
+    this.vif.scb.pslverr   <= '0;
 
-    @(negedge vif.reset_n);
-
-    @(posedge vif.reset_n);
-    `uvm_info(get_type_name(),"reset_n asserted!", UVM_LOW)
+//  @(negedge this.vif.scb.reset_n);
+//
+//  @(posedge this.vif.scb.reset_n);
+//  `uvm_info(get_type_name(),"reset_n asserted!", UVM_LOW)
 
     forever
     begin
@@ -57,17 +57,17 @@ extends uvm_driver #
                                       req.sprint()                      ),
                                       UVM_LOW                             )
 
-          repeat(req.wait_state) @(posedge this.vif.clk);
+          repeat(req.wait_state) @(this.vif.scb);
 
-          this.vif.prdata    <= req.data;
-          this.vif.pslverr   <= req.slave_error;
-          this.vif.pready    <= '1;
+          this.vif.scb.prdata    <= req.data;
+          this.vif.scb.pslverr   <= req.slave_error;
+          this.vif.scb.pready    <= '1;
 
-          @(posedge this.vif.clk);
+          @(this.vif.scb);
 
-          this.vif.prdata    <= ~req.data;
-          this.vif.pready    <= '0;
-          this.vif.pslverr   <= '0;
+          this.vif.scb.prdata    <= ~req.data;
+          this.vif.scb.pready    <= '0;
+          this.vif.scb.pslverr   <= '0;
 
           seq_item_port.item_done();
     end // forever end
