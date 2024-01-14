@@ -9,7 +9,6 @@
 
    `include "uvm_apb_test.svh"
 
-
 module testbench;
 
   bit clk     ;
