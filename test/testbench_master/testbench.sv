@@ -4,67 +4,22 @@
 
    `include "uvm_macros.svh"
 
-   `include "uvm_reset_agent.svh"
+   `include "uvm_reset.svh"
 
-   `include "uvm_apb_agent.svh"
-                                   
-   `include "uvm_apb_sequence.svh" 
-
-   `include "uvm_apb_sequence.svh"
+   `include "uvm_apb.svh"
                                    
    `include "uvm_apb_master_test.svh"     
 
 
-// `include "apb_parameter.svh"
-// `include "apb_interface.svh"  
-
-
-
-
-// import uvm_apb_sequence_pkg::*;
-// import uvm_apb_master_test_pkg::*;
-
-   
-   //////////////////////////////////////////
-
-
-   //////////////////////////////////////////
-
-// `include "uvm_apb_master_sequence.svh"
-// `include "uvm_apb_master_sequence_r.svh"
-// `include "uvm_apb_master_sequence_w.svh"
-//   
-// `include "uvm_apb_master_scoreboard.svh"
-//   
-// `include "uvm_apb_master_env.svh"
-// `include "uvm_apb_master_test.svh"
 
 module testbench;
 
-
-// `include "apb_parameter.svh"
-// `include "apb_interface.svh"
-
-// import uvm_apb_agent_pkg::*;
-
-
-
   bit clk     ;
-//  bit reset_n ;
  
   apb_interface #(apb_parameter)     intf       (.clk(clk));
 
   reset_interface                    intf_reset (.clk(clk));
-  
-//  initial
-//  begin
-//  	reset_n = 1 ;
-//    #10ns       ;
-//    reset_n = 0 ;
-//  	#40ns       ;
-//  	reset_n = 1 ;
-//  end
- 
+   
   initial
   begin
   	clk = 1;

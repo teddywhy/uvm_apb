@@ -20,4 +20,8 @@
 
    `include "uvm_apb_agent/uvm_apb_slave_response_sequence.svh"
 
+   `include "uvm_apb_agent/sequence/uvm_apb_master_sequence.svh"
+   `include "uvm_apb_agent/sequence/uvm_apb_master_sequence_r.svh"
+   `include "uvm_apb_agent/sequence/uvm_apb_master_sequence_w.svh"
+
 `endif

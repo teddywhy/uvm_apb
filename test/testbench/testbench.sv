@@ -3,26 +3,16 @@
 
    `include "uvm_macros.svh"
 
-   `include "uvm_reset_agent.svh"
+   `include "uvm_reset.svh"
 
-   `include "uvm_apb_agent.svh"
-
-   `include "uvm_apb_sequence.svh"
+   `include "uvm_apb.svh"
 
    `include "uvm_apb_test.svh"
 
-   //////////////////////////////////////////
-
-// `include "uvm_apb_master_sequence.svh"
-// `include "uvm_apb_master_sequence_r.svh"
-// `include "uvm_apb_master_sequence_w.svh"
-//   
-// `include "uvm_apb_test_include.svh"
 
 module testbench;
 
   bit clk     ;
-//  bit reset_n ;
  
   apb_interface     #(apb_parameter) intf_m     (.clk(clk));
   apb_interface     #(apb_parameter) intf_s     (.clk(clk));
@@ -36,20 +26,10 @@ module testbench;
   	forever  #5ns clk = ~clk ;  	
   end
 
-//  initial 
-//  begin
-//  	 reset_n = 1 ;
-//     #10ns       ;
-//     reset_n = 0 ;
-//  	 #40ns       ;
-//  	 reset_n = 1 ;
-//  end
 
   initial 
   begin
   	  	
-//   uvm_config_db#(virtual apb_interface#(PM))::set(uvm_root::get(), "*", "vif", intf);
-
      uvm_config_db#(virtual apb_interface#(apb_parameter))::set(null, "*.apb_master_agent", "vif", intf_m);
      uvm_config_db#(virtual apb_interface#(apb_parameter))::set(null, "*.apb_slave_agent",  "vif", intf_s);
 
