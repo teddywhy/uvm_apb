@@ -196,15 +196,15 @@ extends uvm_driver #
                                   this.vif.mcb.psel    <= '0;
                                   this.vif.mcb.penable <= '0;
 
-                                  this.vif.mcb.pstrb   <= ~item_tmp.strobe   ;
-                                  this.vif.mcb.pwrite  <= ~item_tmp.pwrite   ;
-                                  this.vif.mcb.paddr   <= ~item_tmp.address  ;
-                                  this.vif.mcb.pwdata  <= ~item_tmp.data     ;
+//                                this.vif.mcb.pstrb   <= ~item_tmp.strobe   ;
+//                                this.vif.mcb.pwrite  <= ~item_tmp.pwrite   ;
+//                                this.vif.mcb.paddr   <= ~item_tmp.address  ;
+//                                this.vif.mcb.pwdata  <= ~item_tmp.data     ;
 
-//                                this.vif.mcb.pstrb   <= '0;
-//                                this.vif.mcb.pwrite  <= '0;
-//                                this.vif.mcb.paddr   <= '0;
-//                                this.vif.mcb.pwdata  <= '0;
+                                  this.vif.mcb.pstrb   <= '0;
+                                  this.vif.mcb.pwrite  <= '0;
+                                  this.vif.mcb.paddr   <= '0;
+                                  this.vif.mcb.pwdata  <= '0;
                                   
                                   state = IDLE ;       	                       	                                          
                               end

@@ -18,6 +18,12 @@ interface reset_interface
 
     modport master  (clocking mcb);
     modport passive (clocking pcb);
-     
+    
+    task iii;
+      initial begin
+       reset_n = '1;
+     end
+    endtask
+ 
 endinterface : reset_interface
 

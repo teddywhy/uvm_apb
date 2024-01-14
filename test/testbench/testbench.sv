@@ -20,7 +20,7 @@ module testbench;
  
   initial
   begin
-  	clk = 0;
+  	clk = 1;
   	
   	forever  #5ns clk = ~clk ;  	
   end
