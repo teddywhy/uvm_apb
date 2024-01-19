@@ -1,5 +1,5 @@
 
-+incdir+./
++incdir+./include
 
 ## include/agent/apb_parameter.svh
 ## include/agent/apb_interface.svh
