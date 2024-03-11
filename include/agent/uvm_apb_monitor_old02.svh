@@ -14,7 +14,6 @@ extends uvm_monitor;
 
   uvm_analysis_port#(uvm_apb_sequence_item#(PM)) analysis_port ; // analysis port to be connected with scoreboard
 
-
   function new (string name="uvm_apb_monitor", uvm_component parent);
     super.new(name, parent);
 
@@ -22,16 +21,15 @@ extends uvm_monitor;
   endfunction : new
 
   task run_phase(uvm_phase phase);
-//    uvm_apb_sequence_item #(PM) item = uvm_apb_sequence_item#(PM)::type_id::create("item", this); // Create collected item instance
-
     super.run_phase(phase);
 
     `uvm_info(get_type_name(), "Detected Reset Done", UVM_MEDIUM)
 
     forever begin
-    uvm_apb_sequence_item #(PM) item = uvm_apb_sequence_item#(PM)::type_id::create("item", this); // Create collected item instance
+     	uvm_apb_sequence_item #(PM) item = uvm_apb_sequence_item#(PM)::type_id::create("item", this); // Create collected item instance
 
       // capture the signals of the virtual interface and collected items as item_collected.
+
       @(this.vif.pcb)
       begin
          if(this.vif.pcb.psel && this.vif.pcb.penable && this.vif.pcb.pready)

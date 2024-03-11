@@ -27,6 +27,7 @@ extends uvm_monitor;
     	uvm_apb_sequence_item #(PM) item = uvm_apb_sequence_item#(PM)::type_id::create("item", this); // Create collected item instance
 
       // capture the signals of the virtual interface and collected items as item_collected.
+
       @(this.vif.pcb)
       begin
          if(this.vif.pcb.psel & (!this.vif.pcb.penable))
