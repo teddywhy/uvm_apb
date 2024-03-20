@@ -1,9 +1,0 @@
-//
-// File created by:  xrun
-// Do not modify this file
-//
--ACCESS
-+rwc
--RELAX
--timescale
-1ns/1ps
