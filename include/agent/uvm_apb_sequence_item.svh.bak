@@ -1,0 +1,48 @@
+
+// `ifndef __UVM_APB_SEQUENCE_ITEM_SVH__   
+// `define __UVM_APB_SEQUENCE_ITEM_SVH__   
+
+class uvm_apb_sequence_item #
+(
+  parameter apb_parameter_t PM  = apb_parameter
+)
+extends uvm_sequence_item;     
+
+  rand bit [PM.ADDR_WIDTH  -1:0]    address     ;
+  rand bit [PM.DATA_WIDTH  -1:0]    data        ;
+  rand bit [PM.DATA_WIDTH/8-1:0]    strobe      ;                                                    
+  rand bit                          pwrite      ;
+  rand bit                          slave_error ;
+  rand int                          wait_state  ; // Note: wait_state is used for slave driver only.
+  rand int                          delay       ; // Note: delay is used for master driver only.
+
+  
+  constraint address_constraint  
+  { 
+     address                            <= {PM.ADDR_WIDTH{1'b1}} ;
+     address[$clog2(PM.DATA_WIDTH)-1:0] == '0                    ;
+  }
+  constraint delay_constraint      {   delay  inside     {[0:30]} ; }
+  constraint wait_state_constraint {   wait_state inside {[0:10]} ; }
+
+  `uvm_object_param_utils_begin (uvm_apb_sequence_item #(PM)                                )  
+    `uvm_field_int              (address            ,  UVM_ALL_ON                           )
+    `uvm_field_int              (data               ,  UVM_ALL_ON                           )
+    `uvm_field_int              (strobe             ,  UVM_ALL_ON | UVM_BIN                 )
+    `uvm_field_int              (pwrite             ,  UVM_ALL_ON                           )
+    `uvm_field_int              (slave_error        ,  UVM_ALL_ON                           )
+    `uvm_field_int              (wait_state         ,  UVM_ALL_ON | UVM_DEC | UVM_NOCOMPARE )
+    `uvm_field_int              (delay              ,  UVM_ALL_ON | UVM_DEC | UVM_NOCOMPARE )    
+  `uvm_object_utils_end
+
+  function new (string name = "uvm_apb_sequence_item");
+    super.new(name);
+  endfunction : new
+
+
+endclass : uvm_apb_sequence_item
+
+// `endif
+
+// teddywhy@gmail.com
+

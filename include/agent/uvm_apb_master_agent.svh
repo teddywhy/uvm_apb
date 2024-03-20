@@ -29,12 +29,12 @@ extends uvm_agent;
        `uvm_info(get_name(), "Virtual Interface Handle Assignment from uvm_config_db is done!", UVM_LOW)
 
     monitor   = uvm_apb_monitor          #(PM)  ::type_id::create("monitor"  , this);
-    driver    = uvm_apb_master_driver    #(PM)  ::type_id::create("driver"   , this);
-    sequencer = uvm_apb_master_sequencer #(PM)  ::type_id::create("sequencer", this);
 
-//  if(get_is_active() == UVM_ACTIVE) 
-//  begin
-//  end 
+    if(get_is_active() == UVM_ACTIVE) 
+    begin
+      driver    = uvm_apb_master_driver    #(PM)  ::type_id::create("driver"   , this);
+      sequencer = uvm_apb_master_sequencer #(PM)  ::type_id::create("sequencer", this);
+    end 
 
   endfunction : build_phase 
 
@@ -42,9 +42,12 @@ extends uvm_agent;
     super.connect_phase(phase);
 
     monitor.vif = vif ;
-    driver .vif = vif ;
 
-    driver.seq_item_port.connect(sequencer.seq_item_export); // connect sequence item ports of driver and sequencer 
+    if(get_is_active() == UVM_ACTIVE) 
+    begin
+      driver .vif = vif ;
+      driver.seq_item_port.connect(sequencer.seq_item_export); // connect sequence item ports of driver and sequencer 
+    end
      
   endfunction : connect_phase 
 

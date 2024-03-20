@@ -1,0 +1,99 @@
+
+#
+# Preferences
+#
+preferences set plugin-enable-svdatabrowser-new 1
+preferences set plugin-enable-groupscope 0
+preferences set plugin-enable-interleaveandcompare 0
+preferences set plugin-enable-waveformfrequencyplot 0
+
+#
+# Databases
+#
+database require waves -search {
+	./waves.shm/waves.trn
+	/mnt/hgfs/work/uvm_apb/sim/waves.shm/waves.trn
+}
+
+#
+# Mnemonic Maps
+#
+mmap new  -reuse -name {Boolean as Logic} -radix %b -contents {{%c=FALSE -edgepriority 1 -shape low}
+{%c=TRUE -edgepriority 1 -shape high}}
+mmap new  -reuse -name {Example Map} -radix %x -contents {{%b=11???? -bgcolor orange -label REG:%x -linecolor yellow -shape bus}
+{%x=1F -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=2C -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=* -label %x -linecolor gray -shape bus}}
+
+#
+# Waveform windows
+#
+if {[catch {window new WaveWindow -name "Waveform 1" -geometry 1748x751+64+83}] != ""} {
+    window geometry "Waveform 1" 1748x751+64+83
+}
+window target "Waveform 1" on
+waveform using {Waveform 1}
+waveform sidebar select designbrowser
+waveform set \
+    -primarycursor TimeA \
+    -signalnames name \
+    -signalwidth 175 \
+    -units ns \
+    -valuewidth 75
+waveform baseline set -time 0
+
+set id [waveform add -signals  {
+	waves::testbench.intf_m.clk
+	} ]
+set id [waveform add -signals  {
+	{waves::testbench.intf_m.paddr[10:0]}
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.penable
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.pprot
+	} ]
+set id [waveform add -signals  {
+	{waves::testbench.intf_m.prdata[31:0]}
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.pready
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.psel
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.pslverr
+	} ]
+set id [waveform add -signals  {
+	{waves::testbench.intf_m.pstrb[3:0]}
+	} ]
+set id [waveform add -signals  {
+	{waves::testbench.intf_m.pwdata[31:0]}
+	} ]
+set id [waveform add -signals  {
+	waves::testbench.intf_m.pwrite
+	} ]
+set id [waveform add -signals  {
+	{waves::$uvm:{uvm_test_top.env.apb_master_agent.sequencer}.master_sequence_r}
+	} ]
+set id [waveform add -signals  {
+	{waves::$uvm:{uvm_test_top.env.apb_master_agent.sequencer}.master_sequence_w}
+	} ]
+
+waveform xview limits 0 3680ns
+
+#
+# Waveform Window Links
+#
+
+#
+# Console windows
+#
+console set -windowname Console
+window geometry Console 600x250+0+0
+
+#
+# Layout selection
+#

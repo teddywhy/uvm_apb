@@ -25,14 +25,14 @@ extends uvm_sequence_item;
   constraint delay_constraint      {   delay  inside     {[0:30]} ; }
   constraint wait_state_constraint {   wait_state inside {[0:10]} ; }
 
-  `uvm_object_utils_begin (uvm_apb_sequence_item #(PM)     )  
-    `uvm_field_int        (address            ,  UVM_ALL_ON)
-    `uvm_field_int        (data               ,  UVM_ALL_ON)
-    `uvm_field_int        (strobe             ,  UVM_ALL_ON)
-    `uvm_field_int        (pwrite             ,  UVM_ALL_ON)
-    `uvm_field_int        (slave_error        ,  UVM_ALL_ON)
-    `uvm_field_int        (wait_state         ,  UVM_ALL_ON)
-    `uvm_field_int        (delay              ,  UVM_ALL_ON)    
+  `uvm_object_param_utils_begin (uvm_apb_sequence_item #(PM)                                )  
+    `uvm_field_int              (address            ,  UVM_ALL_ON                           )
+    `uvm_field_int              (data               ,  UVM_ALL_ON                           )
+    `uvm_field_int              (strobe             ,  UVM_ALL_ON | UVM_BIN                 )
+    `uvm_field_int              (pwrite             ,  UVM_ALL_ON | UVM_BIN                 )
+    `uvm_field_int              (slave_error        ,  UVM_ALL_ON                           )
+    `uvm_field_int              (wait_state         ,  UVM_ALL_ON | UVM_DEC | UVM_NOCOMPARE )
+    `uvm_field_int              (delay              ,  UVM_ALL_ON | UVM_DEC | UVM_NOCOMPARE )    
   `uvm_object_utils_end
 
   function new (string name = "uvm_apb_sequence_item");
